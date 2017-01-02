@@ -24,3 +24,8 @@ def RL(sx):
     str_sx = format(sx, 'b').zfill(8)
     rl_sx = str_sx[1:] + str_sx[0]
     return int(rl_sx)
+
+def RR(sx):
+    str_sx = format(sx, 'b').zfill(8)
+    rr_sx = str_sx[7] + str_sx[0:6]
+    return int(rr_sx)
