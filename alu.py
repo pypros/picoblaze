@@ -46,6 +46,20 @@ def AND(sx, operand):
     return (sx & operand), zero, carry
 
 
+def COMPARE(sx, operand):
+    if operand > sx:
+        carry = 1
+    else:
+        carry = 0
+
+    if sx ==operand:
+        zero = 1
+    else:
+        zero = 0
+
+    return zero, carry
+
+
 def OR(sx, operand):
     return sx | operand
 
