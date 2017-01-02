@@ -204,7 +204,18 @@ def SRA(sx, carry):
 
 def SUB(sx, operand):
     sx = (sx - operand) % 256
-    return sx
+
+    if (sx - operand) < 0:
+        carry = 1
+    else:
+        carry = 0
+
+    if (sx - operand) == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return sx, zero, carry
 
 
 def SUBCY(sx, operand, carry):
