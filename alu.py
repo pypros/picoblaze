@@ -74,7 +74,14 @@ def OR(sx, operand):
 def RL(sx):
     str_sx = format(sx, 'b').zfill(8)
     rl_sx = str_sx[1:] + str_sx[0]
-    return int(rl_sx, 2)
+
+    carry = int(str_sx[0])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return int(rl_sx, 2), zero, carry
 
 
 def RR(sx):
