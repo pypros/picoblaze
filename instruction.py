@@ -74,3 +74,8 @@ def SRA(sx, carry_in):
     str_sx = format(sx, 'b').zfill(8)
     sra_sx = str(carry_in) + str_sx[0:7]
     return int(sra_sx, 2)
+
+
+def SUB(sx, operand):
+    sx = (sx - operand) % 256
+    return sx
