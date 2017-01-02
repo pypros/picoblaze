@@ -10,3 +10,8 @@ def ADDCY(sx, operand, carry_in):
     else:
         sx = (sx + operand) % 256
     return sx
+
+
+def AND(sx, operand):
+    return sx & operand
+
