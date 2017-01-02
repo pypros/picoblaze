@@ -1,6 +1,17 @@
 def ADD(sx, operand):
     sx = (sx + operand) % 256
-    return sx
+
+    if (sx + operand) > 255:
+        carry = 1
+    else:
+        carry = 0
+
+    if (sx + operand) == 0 or (sx + operand) == 256:
+        zero = 1
+    else:
+        zero = 0
+
+    return sx, carry, zero
 
 
 def ADDCY(sx, operand, carry):
