@@ -44,14 +44,14 @@ def SL1(sx):
 
 def SLX(sx):
     str_sx = format(sx, 'b').zfill(8)
-    sl1_sx = str_sx[1:] + str_sx[7]
-    return int(sl1_sx, 2)
+    slx_sx = str_sx[1:] + str_sx[7]
+    return int(slx_sx, 2)
 
 
 def SLA(sx, carry_in):
     str_sx = format(sx, 'b').zfill(8)
-    sl1_sx = str_sx[1:] + str(carry_in)
-    return int(sl1_sx, 2)
+    sla_sx = str_sx[1:] + str(carry_in)
+    return int(sla_sx, 2)
 
 
 def SR0(sx):
@@ -60,8 +60,9 @@ def SR0(sx):
 
 def SR1(sx):
     str_sx = format(sx, 'b').zfill(8)
-    sl1_sx = '1' + str_sx[0:7]
-    return int(sl1_sx, 2)
+    sr1_sx = '1' + str_sx[0:7]
+    return int(sr1_sx, 2)
+
 
 def SRX(sx):
     str_sx = format(sx, 'b').zfill(8)
