@@ -239,5 +239,22 @@ def SUBCY(sx, operand, carry):
     return sx, zero, carry
 
 
+def TEST(sx, operand):
+    and_test = sx & operand
+
+    if and_test == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    xor_test = sx ^ operand
+
+    if xor_test == 0:
+        carry = 1
+    else:
+        carry = 0
+
+    return zero, carry
+
 def XOR(sx, operand):
     return sx ^ operand
