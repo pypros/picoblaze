@@ -23,13 +23,13 @@ def OR(sx, operand):
 def RL(sx):
     str_sx = format(sx, 'b').zfill(8)
     rl_sx = str_sx[1:] + str_sx[0]
-    return int(rl_sx,2)
+    return int(rl_sx, 2)
 
 
 def RR(sx):
     str_sx = format(sx, 'b').zfill(8)
     rr_sx = str_sx[7] + str_sx[0:7]
-    return int(rr_sx,2)
+    return int(rr_sx, 2)
 
 
 def SL0(sx):
@@ -39,16 +39,16 @@ def SL0(sx):
 def SL1(sx):
     str_sx = format(sx, 'b').zfill(8)
     sl1_sx = str_sx[1:] + '1'
-    return int(sl1_sx,2)
+    return int(sl1_sx, 2)
 
 
 def SLX(sx):
     str_sx = format(sx, 'b').zfill(8)
     sl1_sx = str_sx[1:] + str_sx[7]
-    return int(sl1_sx,2)
+    return int(sl1_sx, 2)
 
 
 def SLA(sx, carry_in):
     str_sx = format(sx, 'b').zfill(8)
     sl1_sx = str_sx[1:] + str(carry_in)
-    return int(sl1_sx,2)
+    return int(sl1_sx, 2)
