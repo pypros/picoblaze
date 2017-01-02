@@ -76,6 +76,7 @@ def RL(sx):
     rl_sx = str_sx[1:] + str_sx[0]
 
     carry = int(str_sx[0])
+
     if sx == 0:
         zero = 1
     else:
@@ -89,6 +90,7 @@ def RR(sx):
     rr_sx = str_sx[7] + str_sx[0:7]
 
     carry = int(str_sx[7])
+
     if sx == 0:
         zero = 1
     else:
@@ -101,6 +103,7 @@ def SL0(sx):
     str_sx = format(sx, 'b').zfill(8)
 
     carry = int(str_sx[0])
+
     if sx == 0:
         zero = 1
     else:
@@ -113,6 +116,7 @@ def SL1(sx):
     sl1_sx = str_sx[1:] + '1'
 
     carry = int(str_sx[0])
+
     if sx == 0:
         zero = 1
     else:
