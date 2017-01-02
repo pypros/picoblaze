@@ -257,4 +257,11 @@ def TEST(sx, operand):
     return zero, carry
 
 def XOR(sx, operand):
-    return sx ^ operand
+    carry = 0
+
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return sx ^ operand, zero, carry
