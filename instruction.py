@@ -15,3 +15,6 @@ def ADDCY(sx, operand, carry_in):
 def AND(sx, operand):
     return sx & operand
 
+
+def OR(sx, operand):
+    return sx | operand
