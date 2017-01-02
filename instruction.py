@@ -67,3 +67,9 @@ def SRX(sx):
     str_sx = format(sx, 'b').zfill(8)
     srx_sx = str_sx[0] + str_sx[0:7]
     return int(srx_sx, 2)
+
+
+def SRA(sx, carry_in):
+    str_sx = format(sx, 'b').zfill(8)
+    sra_sx = str(carry_in) + str_sx[0:7]
+    return int(sra_sx, 2)
