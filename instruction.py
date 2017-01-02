@@ -38,11 +38,17 @@ def SL0(sx):
 
 def SL1(sx):
     str_sx = format(sx, 'b').zfill(8)
-    sl1_sx = str_sx[1:8] + '1'
+    sl1_sx = str_sx[1:] + '1'
     return int(sl1_sx,2)
 
 
 def SLX(sx):
     str_sx = format(sx, 'b').zfill(8)
-    sl1_sx = str_sx[1:8] + str_sx[7]
+    sl1_sx = str_sx[1:] + str_sx[7]
+    return int(sl1_sx,2)
+
+
+def SLA(sx, carry_in):
+    str_sx = format(sx, 'b').zfill(8)
+    sl1_sx = str_sx[1:] + str(carry_in)
     return int(sl1_sx,2)
