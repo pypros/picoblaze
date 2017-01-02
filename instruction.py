@@ -39,4 +39,5 @@ def SL0(sx):
 def SL1(sx):
     str_sx = format(sx, 'b').zfill(8)
     sl1_sx = str_sx[1:8] + '1'
-    return sl1_sx
+    return int(sl1_sx)
+
