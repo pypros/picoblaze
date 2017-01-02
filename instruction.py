@@ -2,7 +2,6 @@ def ADD(sx, operand):
     sx = (sx + operand) % 256
     return sx
 
-
 def ADDCY(sx, operand, carry):
     sx = (sx + operand) % 256
     if carry:
