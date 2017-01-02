@@ -52,3 +52,7 @@ def SLA(sx, carry_in):
     str_sx = format(sx, 'b').zfill(8)
     sl1_sx = str_sx[1:] + str(carry_in)
     return int(sl1_sx, 2)
+
+
+def SR0(sx):
+    return sx >> 1
