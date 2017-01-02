@@ -62,3 +62,8 @@ def SR1(sx):
     str_sx = format(sx, 'b').zfill(8)
     sl1_sx = '1' + str_sx[0:7]
     return int(sl1_sx, 2)
+
+def SRX(sx):
+    str_sx = format(sx, 'b').zfill(8)
+    srx_sx = str_sx[0] + str_sx[0:7]
+    return int(srx_sx, 2)
