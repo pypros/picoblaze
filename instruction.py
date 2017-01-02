@@ -18,3 +18,9 @@ def AND(sx, operand):
 
 def OR(sx, operand):
     return sx | operand
+
+
+def RL(sx):
+    str_sx = format(sx, 'b').zfill(8)
+    rl_sx = str_sx[1:] + str_sx[0]
+    return int(rl_sx)
