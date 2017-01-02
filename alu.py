@@ -11,7 +11,7 @@ def ADD(sx, operand):
     else:
         zero = 0
 
-    return sx, carry, zero
+    return sx, zero, carry
 
 
 def ADDCY(sx, operand, carry):
@@ -32,11 +32,18 @@ def ADDCY(sx, operand, carry):
     else:
         zero = 0
 
-    return sx, carry, zero
+    return sx, zero, carry
 
 
 def AND(sx, operand):
-    return sx & operand
+    carry = 0
+
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return (sx & operand), zero, carry
 
 
 def OR(sx, operand):
