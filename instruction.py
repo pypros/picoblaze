@@ -3,9 +3,9 @@ def ADD(sx, operand):
     return sx
 
 
-def ADDCY(sx, operand, carry_in):
+def ADDCY(sx, operand, carry):
     sx = (sx + operand) % 256
-    if carry_in:
+    if carry:
         sx = (sx + operand + 1) % 256
     else:
         sx = (sx + operand) % 256
@@ -48,9 +48,9 @@ def SLX(sx):
     return int(slx_sx, 2)
 
 
-def SLA(sx, carry_in):
+def SLA(sx, carry):
     str_sx = format(sx, 'b').zfill(8)
-    sla_sx = str_sx[1:] + str(carry_in)
+    sla_sx = str_sx[1:] + str(carry)
     return int(sla_sx, 2)
 
 
@@ -70,9 +70,9 @@ def SRX(sx):
     return int(srx_sx, 2)
 
 
-def SRA(sx, carry_in):
+def SRA(sx, carry):
     str_sx = format(sx, 'b').zfill(8)
-    sra_sx = str(carry_in) + str_sx[0:7]
+    sra_sx = str(carry) + str_sx[0:7]
     return int(sra_sx, 2)
 
 
@@ -81,9 +81,9 @@ def SUB(sx, operand):
     return sx
 
 
-def SUBCY(sx, operand, carry_in):
+def SUBCY(sx, operand, carry):
     sx = (sx + operand) % 256
-    if carry_in:
+    if carry:
         sx = (sx - operand - 1) % 256
     else:
         sx = (sx - operand) % 256
