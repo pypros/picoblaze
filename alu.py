@@ -87,7 +87,14 @@ def RL(sx):
 def RR(sx):
     str_sx = format(sx, 'b').zfill(8)
     rr_sx = str_sx[7] + str_sx[0:7]
-    return int(rr_sx, 2)
+
+    carry = int(str_sx[7])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return int(rr_sx, 2), zero, carry
 
 
 def SL0(sx):
