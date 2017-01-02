@@ -43,7 +43,7 @@ def AND(sx, operand):
     else:
         zero = 0
 
-    return (sx & operand), zero, carry
+    return sx & operand, zero, carry
 
 
 def COMPARE(sx, operand):
@@ -52,7 +52,7 @@ def COMPARE(sx, operand):
     else:
         carry = 0
 
-    if sx ==operand:
+    if sx == operand:
         zero = 1
     else:
         zero = 0
@@ -61,7 +61,14 @@ def COMPARE(sx, operand):
 
 
 def OR(sx, operand):
-    return sx | operand
+    carry = 0
+
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return sx | operand, zero, carry
 
 
 def RL(sx):
