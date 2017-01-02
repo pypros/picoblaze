@@ -88,3 +88,7 @@ def SUBCY(sx, operand, carry_in):
     else:
         sx = (sx - operand) % 256
     return sx
+
+
+def XOR(sx, operand):
+    return sx ^ operand
