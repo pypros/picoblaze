@@ -41,3 +41,8 @@ def SL1(sx):
     sl1_sx = str_sx[1:8] + '1'
     return int(sl1_sx)
 
+
+def SLX(sx):
+    str_sx = format(sx, 'b').zfill(8)
+    sl1_sx = str_sx[1:8] + str_sx[7]
+    return int(sl1_sx)
