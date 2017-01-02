@@ -28,10 +28,15 @@ def RL(sx):
 
 def RR(sx):
     str_sx = format(sx, 'b').zfill(8)
-    rr_sx = str_sx[7] + str_sx[0:6]
+    rr_sx = str_sx[7] + str_sx[0:7]
     return int(rr_sx)
 
 
 def SL0(sx):
     return sx << 1
 
+
+def SL1(sx):
+    str_sx = format(sx, 'b').zfill(8)
+    sl1_sx = str_sx[1:8] + '1'
+    return sl1_sx
