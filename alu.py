@@ -98,47 +98,104 @@ def RR(sx):
 
 
 def SL0(sx):
-    return sx << 1
+    str_sx = format(sx, 'b').zfill(8)
+
+    carry = int(str_sx[0])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+    return sx << 1, zero, carry
 
 
 def SL1(sx):
     str_sx = format(sx, 'b').zfill(8)
     sl1_sx = str_sx[1:] + '1'
-    return int(sl1_sx, 2)
+
+    carry = int(str_sx[0])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return int(sl1_sx, 2), zero, carry
 
 
 def SLX(sx):
     str_sx = format(sx, 'b').zfill(8)
     slx_sx = str_sx[1:] + str_sx[7]
-    return int(slx_sx, 2)
+
+    carry = int(str_sx[0])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return int(slx_sx, 2), zero, carry
 
 
 def SLA(sx, carry):
     str_sx = format(sx, 'b').zfill(8)
     sla_sx = str_sx[1:] + str(carry)
-    return int(sla_sx, 2)
+
+    carry = int(str_sx[0])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return int(sla_sx, 2), zero, carry
 
 
 def SR0(sx):
-    return sx >> 1
+    str_sx = format(sx, 'b').zfill(8)
+
+    carry = int(str_sx[7])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return sx >> 1, zero, carry
 
 
 def SR1(sx):
     str_sx = format(sx, 'b').zfill(8)
     sr1_sx = '1' + str_sx[0:7]
-    return int(sr1_sx, 2)
+
+    carry = int(str_sx[7])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return int(sr1_sx, 2), zero, carry
 
 
 def SRX(sx):
     str_sx = format(sx, 'b').zfill(8)
     srx_sx = str_sx[0] + str_sx[0:7]
-    return int(srx_sx, 2)
+
+    carry = int(str_sx[7])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return int(srx_sx, 2), zero, carry
 
 
 def SRA(sx, carry):
     str_sx = format(sx, 'b').zfill(8)
     sra_sx = str(carry) + str_sx[0:7]
-    return int(sra_sx, 2)
+
+    carry = int(str_sx[7])
+    if sx == 0:
+        zero = 1
+    else:
+        zero = 0
+
+    return int(sra_sx, 2), zero, carry
 
 
 def SUB(sx, operand):
