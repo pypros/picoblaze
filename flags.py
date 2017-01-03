@@ -1,10 +1,9 @@
 class Flags:
-    z = 0
-    c = 0
-
-    def __init__(self,**kwargs):
-        self.z = kwargs['zero']
-        self.c = kwargs['carry']
+    def __init__(self):
+        self.zero = 0
+        self.carry = 0
+        self.preserved_zero = 0
+        self.preserved_carry = 0
 
     def get_zero(self):
         return self.z
