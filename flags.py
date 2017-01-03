@@ -16,3 +16,15 @@ class Flags:
 
     def set_carry(self, value):
         self.carry = value
+
+    def get_preserved_zero(self):
+        return self.preserved_zero
+
+    def get_preserved_carry(self):
+        return self.preserved_carry
+
+    def set_preserved_zero(self, value):
+        self.preserved_zero = value
+
+    def set_preserved_carry(self, value):
+        self.preserved_carry = value
