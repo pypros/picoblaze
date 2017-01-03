@@ -12,8 +12,8 @@ class Flags:
     def get_carry(self):
         return self.c
 
-    def set_zero(self, *args):
-        self.z = args[0]
+    def set_zero(self, value):
+        self.z = value
 
-    def set_carry(self, *args):
-        self.c = args[0]
+    def set_carry(self, value):
+        self.c = value
