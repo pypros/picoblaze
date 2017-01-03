@@ -6,13 +6,13 @@ class Flags:
         self.preserved_carry = 0
 
     def get_zero(self):
-        return self.z
+        return self.zero
 
     def get_carry(self):
-        return self.c
+        return self.carry
 
     def set_zero(self, value):
-        self.z = value
+        self.zero = value
 
     def set_carry(self, value):
-        self.c = value
+        self.carry = value
