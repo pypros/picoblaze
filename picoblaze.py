@@ -1,3 +1,6 @@
+from internal_element_picoblaze.general_purpose_registers import SixteenByteWideRegisters
+
+
 class PicoBlaze:
     def __init__(self):
         self.i_in_port = [0] * 8
@@ -9,3 +12,5 @@ class PicoBlaze:
         self.o_read_strobe = 0
         self.o_write_strobe = 0
         self.o_interrupt_ack = 0
+        self._SixteenByteWideRegisters = SixteenByteWideRegisters()
+
