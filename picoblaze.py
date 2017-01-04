@@ -1,4 +1,5 @@
 from internal_element_picoblaze.general_purpose_registers import SixteenByteWideRegisters
+from internal_element_picoblaze.instruction_decoder import Decoder
 
 class PicoBlaze:
     def __init__(self):
@@ -12,7 +13,4 @@ class PicoBlaze:
         self.o_write_strobe = 0
         self.o_interrupt_ack = 0
         self.__SixteenByteWideRegisters = SixteenByteWideRegisters()
-
-# cpu = PicoBlaze()
-#
-# print cpu.i_in_port
+        self.__Decoder = Decoder()
