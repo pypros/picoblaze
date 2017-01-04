@@ -2,6 +2,7 @@ from internal_element_picoblaze.instruction_program_store import Program
 from internal_element_picoblaze.general_purpose_registers import SixteenByteWideRegisters
 from internal_element_picoblaze.instruction_decoder import Decoder
 
+
 class PicoBlaze:
     def __init__(self):
         self.i_in_port = 0
