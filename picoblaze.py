@@ -176,6 +176,126 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
+    def __SL0(self):
+        sx = int(self.__instruction[6:10], 2)
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        sl0 = self.__sixteen_byte_wide_registers[sx] << 1
+        self.__sixteen_byte_wide_registers[sx] = sl0
+
+        self.__flag_carry = int(str_sx[0])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __SL1(self):
+        sx = int(self.__instruction[6:10], 2)
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        sl1_sx = str_sx[1:] + '1'
+
+        self.__sixteen_byte_wide_registers[sx] = int(sl1_sx, 2)
+        self.__flag_carry = int(str_sx[0])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __SLA(self):
+        sx = int(self.__instruction[6:10], 2)
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        sla_sx = str_sx[1:] + str(self.__flag_carry)
+        self.__sixteen_byte_wide_registers[sx] = int(sla_sx, 2)
+
+        self.__flag_carry = int(str_sx[0])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __SLX(self):
+        sx = int(self.__instruction[6:10], 2)
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        slx_sx = str_sx[1:] + str_sx[7]
+        self.__sixteen_byte_wide_registers[sx] = int(slx_sx, 2)
+
+        self.__flag_carry = int(str_sx[0])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __SR0(self):
+        sx = int(self.__instruction[6:10], 2)
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        sr0 = self.__sixteen_byte_wide_registers[sx] >> 1
+        self.__sixteen_byte_wide_registers[sx] = sr0
+
+        self.__flag_carry = int(str_sx[7])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __SR1(self):
+        sx = int(self.__instruction[6:10], 2)
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        sr1_sx = '1' + str_sx[0:7]
+
+        self.__sixteen_byte_wide_registers[sx] = int(sr1_sx, 2)
+        self.__flag_carry = int(str_sx[7])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __SRA(self):
+        sx = int(self.__instruction[6:10], 2)
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        sra_sx = str(self.__flag_carry) + str_sx[0:7]
+        self.__sixteen_byte_wide_registers[sx] = int(sra_sx, 2)
+
+        self.__flag_carry = int(str_sx[7])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __SRX(self):
+        sx = int(self.__instruction[6:10], 2)
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        srx_sx = str_sx[0] + str_sx[0:7]
+        self.__sixteen_byte_wide_registers[sx] = int(srx_sx, 2)
+
+        self.__flag_carry = int(str_sx[7])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
     def __exec_instruction(self, name_instruction):
         if name_instruction == "ADD":
             self.__ADD()
@@ -200,22 +320,22 @@ class PicoBlaze:
                 self.__SLA()
             elif self.__instruction[14:18] == "0100":
                 self.__SLX()
-            elif self.__instruction[14:18] == "1110":
-                self.__SR0()
-            elif self.__instruction[14:18] == "1111":
-                self.__SR1()
-            elif self.__instruction[14:18] == "1000":
-                self.__SRA()
-            elif self.__instruction[14:18] == "1010":
-                self.__SRA()
+            # elif self.__instruction[14:18] == "1110":
+            #     self.__SR0()
+            # elif self.__instruction[14:18] == "1111":
+            #     self.__SR1()
+            # elif self.__instruction[14:18] == "1000":
+            #     self.__SRA()
+            # elif self.__instruction[14:18] == "1010":
+            #     self.__SRX()
         else:
             print "instruction unsupported"
 
     def run(self):
         # instruction = self.__program.get_instruction()
         print self.__sixteen_byte_wide_registers
-        self.__instruction = "100000111100000000" #ADD s0,s15
-        self.__sixteen_byte_wide_registers[0] = 1
+        self.__instruction = "100000111100000110" #ADD s0,s15
+        self.__sixteen_byte_wide_registers[15] = 1
         # self.__sixteen_byte_wide_registers[15] = 15
         print self.__sixteen_byte_wide_registers
         name_instruction = self.__operation[self.__instruction[0:5]]
