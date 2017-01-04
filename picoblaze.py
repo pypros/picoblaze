@@ -83,7 +83,7 @@ class PicoBlaze:
         else:
             self.__flag_carry = 0
 
-        if ((self.__sixteen_byte_wide_registers[sx] + self.__sixteen_byte_wide_registers[operand] == 0) or
+        if ((self.__sixteen_byte_wide_registers[sx] + self.__sixteen_byte_wide_registers[operand] + self.__flag_carry) == 0 or
                 (self.__sixteen_byte_wide_registers[sx] + self.__sixteen_byte_wide_registers[operand] + self.__flag_carry) == 256):
             self.__flag_zero = 1
         else:
@@ -295,6 +295,100 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
+    def __SUB(self):
+        sx = int(self.__instruction[6:10], 2)
+        if self.__instruction[5] == '1':
+            operand = int(self.__instruction[10:14], 2)
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.__sixteen_byte_wide_registers[sx] = (self.__sixteen_byte_wide_registers[sx]
+                                                  - self.__sixteen_byte_wide_registers[operand]) % 256
+        if (self.__sixteen_byte_wide_registers[sx]
+                - self.__sixteen_byte_wide_registers[operand]) < 0:
+            self.__flag_carry = 1
+        else:
+            self.__flag_carry = 0
+
+        if self.__sixteen_byte_wide_registers[sx] - self.__sixteen_byte_wide_registers[operand] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __SUBCY(self):
+        sx = int(self.__instruction[6:10], 2)
+        if self.__instruction[5] == '1':
+            operand = int(self.__instruction[10:14], 2)
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.__sixteen_byte_wide_registers[sx] = (self.__sixteen_byte_wide_registers[sx]
+                                                  - self.__sixteen_byte_wide_registers[operand] - self.__flag_carry) % 256
+
+        if self.__flag_carry:
+            self.__sixteen_byte_wide_registers[sx] = (self.__sixteen_byte_wide_registers[sx] -
+                                                      self.__sixteen_byte_wide_registers[operand] - 1) % 256
+        else:
+            self.__sixteen_byte_wide_registers[sx] = (self.__sixteen_byte_wide_registers[sx] -
+                                                      self.__sixteen_byte_wide_registers[operand]) % 256
+
+        if (self.__sixteen_byte_wide_registers[sx]
+                - self.__sixteen_byte_wide_registers[operand] - self.__flag_carry) < 0:
+            self.__flag_carry = 1
+        else:
+            self.__flag_carry = 0
+
+        if ((self.__sixteen_byte_wide_registers[sx] - self.__sixteen_byte_wide_registers[operand] - self.__flag_carry == 0) or
+                (self.__sixteen_byte_wide_registers[sx] - self.__sixteen_byte_wide_registers[operand] - self.__flag_carry) == -256):
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __TEST(self):
+        sx = int(self.__instruction[6:10], 2)
+        if self.__instruction[5] == '1':
+            operand = int(self.__instruction[10:14], 2)
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        and_test = self.__sixteen_byte_wide_registers[sx] & self.__sixteen_byte_wide_registers[operand]
+
+        if and_test == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        xor_test = self.__sixteen_byte_wide_registers[sx] ^ self.__sixteen_byte_wide_registers[operand]
+
+        if xor_test == 0:
+            self.__flag_carry = 1
+        else:
+            self.__flag_carry = 0
+
+        self.__program_counter += 1
+
+    def __XOR(self):
+        sx = int(self.__instruction[6:10], 2)
+        if self.__instruction[5] == '1':
+            operand = int(self.__instruction[10:14], 2)
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.__sixteen_byte_wide_registers[sx] ^= self.__sixteen_byte_wide_registers[operand]
+
+        self.__flag_carry = 0
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
     def __exec_instruction(self, name_instruction):
         if name_instruction == "ADD":
             self.__ADD()
@@ -327,6 +421,14 @@ class PicoBlaze:
                 self.__SRA()
             elif self.__instruction[14:18] == "1010":
                 self.__SRX()
+        elif name_instruction == "SUB":
+            self.__SUB()
+        elif name_instruction == "SUBCY":
+            self.__SUBCY()
+        elif name_instruction == "TEST":
+            self.__TEST()
+        elif name_instruction == "XOR":
+            self.__XOR()
         else:
             print "instruction unsupported"
 
