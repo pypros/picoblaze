@@ -109,11 +109,54 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
+    def __COMPARE(self):
+        sx = int(self.__instruction[6:10], 2)
+        if self.__instruction[5] == '1':
+            operand = int(self.__instruction[10:14], 2)
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        if self.__sixteen_byte_wide_registers[operand] > self.__sixteen_byte_wide_registers[sx]:
+            self.__flag_carry = 1
+        else:
+            self.__flag_carry = 0
+
+        if self.__sixteen_byte_wide_registers[operand] == self.__sixteen_byte_wide_registers[sx]:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __OR(self):
+        sx = int(self.__instruction[6:10], 2)
+        if self.__instruction[5] == '1':
+            operand = int(self.__instruction[10:14], 2)
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.__sixteen_byte_wide_registers[sx] |= self.__sixteen_byte_wide_registers[operand]
+
+        self.__flag_carry = 0
+
+        if sx == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
     def __exec_instruction(self, name_instruction):
         if name_instruction == "ADD":
             self.__ADD()
         elif name_instruction == "ADDCY":
             self.__ADDCY()
+        elif name_instruction == "AND":
+            self.__AND()
+        elif name_instruction == "COMPARE":
+            self.__COMPARE()
+        elif name_instruction == "OR":
+            self.__OR()
         else:
             print "instruction unsupported"
 
