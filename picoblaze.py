@@ -139,7 +139,37 @@ class PicoBlaze:
 
         self.__flag_carry = 0
 
-        if sx == 0:
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __RL(self):
+        sx = int(self.__instruction[6:10], 2)
+
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        rl_sx = str_sx[1:] + str_sx[0]
+        self.__sixteen_byte_wide_registers[sx] = int(rl_sx, 2)
+        self.__flag_carry = int(str_sx[0])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __RR(self):
+        sx = int(self.__instruction[6:10], 2)
+
+        str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
+        rr_sx = str_sx[7] + str_sx[0:7]
+        self.__sixteen_byte_wide_registers[sx] = int(rr_sx, 2)
+        self.__flag_carry = int(str_sx[7])
+
+        if self.__sixteen_byte_wide_registers[sx] == 0:
             self.__flag_zero = 1
         else:
             self.__flag_zero = 0
@@ -157,13 +187,34 @@ class PicoBlaze:
             self.__COMPARE()
         elif name_instruction == "OR":
             self.__OR()
+        elif name_instruction == "SHIFT":
+            if self.__instruction[14:18] == "0010":
+                self.__RL()
+            elif self.__instruction[14:18] == "1100":
+                self.__RR()
+            elif self.__instruction[14:18] == "0110":
+                self.__SL0()
+            elif self.__instruction[14:18] == "0111":
+                self.__SL1()
+            elif self.__instruction[14:18] == "0000":
+                self.__SLA()
+            elif self.__instruction[14:18] == "0100":
+                self.__SLX()
+            elif self.__instruction[14:18] == "1110":
+                self.__SR0()
+            elif self.__instruction[14:18] == "1111":
+                self.__SR1()
+            elif self.__instruction[14:18] == "1000":
+                self.__SRA()
+            elif self.__instruction[14:18] == "1010":
+                self.__SRA()
         else:
             print "instruction unsupported"
 
     def run(self):
         # instruction = self.__program.get_instruction()
         print self.__sixteen_byte_wide_registers
-        self.__instruction = "011011111100000000" #ADD s0,s15
+        self.__instruction = "100000111100000000" #ADD s0,s15
         self.__sixteen_byte_wide_registers[0] = 1
         # self.__sixteen_byte_wide_registers[15] = 15
         print self.__sixteen_byte_wide_registers
