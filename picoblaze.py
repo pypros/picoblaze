@@ -16,3 +16,6 @@ class PicoBlaze:
         self.__Program = Program()
         self.__Decoder = Decoder()
         self.__SixteenByteWideRegisters = SixteenByteWideRegisters()
+
+    def run(self):
+        pass
