@@ -39,7 +39,6 @@ class PicoBlaze:
             "00111": "XOR"
         }
 
-# ALU
     def __ADD(self):
         sx = int(self.__instruction[6:10], 2)
         if self.__instruction[5] == '1':
@@ -320,14 +319,14 @@ class PicoBlaze:
                 self.__SLA()
             elif self.__instruction[14:18] == "0100":
                 self.__SLX()
-            # elif self.__instruction[14:18] == "1110":
-            #     self.__SR0()
-            # elif self.__instruction[14:18] == "1111":
-            #     self.__SR1()
-            # elif self.__instruction[14:18] == "1000":
-            #     self.__SRA()
-            # elif self.__instruction[14:18] == "1010":
-            #     self.__SRX()
+            elif self.__instruction[14:18] == "1110":
+                self.__SR0()
+            elif self.__instruction[14:18] == "1111":
+                self.__SR1()
+            elif self.__instruction[14:18] == "1000":
+                self.__SRA()
+            elif self.__instruction[14:18] == "1010":
+                self.__SRX()
         else:
             print "instruction unsupported"
 
