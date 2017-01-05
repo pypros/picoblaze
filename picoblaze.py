@@ -161,11 +161,12 @@ class PicoBlaze:
         sx = int(self.__instruction[6:10], 2)
         if self.__instruction[5] == '1':
             operand = int(self.__instruction[10:14], 2)
+            self.o_port_id = self.__sixteen_byte_wide_registers[operand]
         else:
             operand = int(self.__instruction[10:], 2)
+            self.o_port_id = operand
 
         self.o_out_port = self.__sixteen_byte_wide_registers[sx]
-        self.o_port_id = self.__sixteen_byte_wide_registers[operand]
 
         self.__program_counter += 1
 
@@ -424,6 +425,8 @@ class PicoBlaze:
             self.__COMPARE()
         elif name_instruction == "OR":
             self.__OR()
+        elif name_instruction == "OUTPUT":
+            self.__OUTPUT()
         elif name_instruction == "SHIFT":
             if self.__instruction[14:18] == "0010":
                 self.__RL()
@@ -459,16 +462,31 @@ class PicoBlaze:
     def run(self):
         # instruction = self.__program.get_instruction()
         print self.__sixteen_byte_wide_registers
-        self.__instruction = "100000111100000110" #ADD s0,s15
-        self.__sixteen_byte_wide_registers[15] = 1
-        # self.__sixteen_byte_wide_registers[15] = 15
+        self.__sixteen_byte_wide_registers[0] = 1
+        self.__sixteen_byte_wide_registers[15] = 15
         print self.__sixteen_byte_wide_registers
+        self.__instruction = "101101000000000000" #OUTPUT s0, s0
         name_instruction = self.__operation[self.__instruction[0:5]]
         print name_instruction
         self.__exec_instruction(name_instruction)
-        print int(self.__instruction[6:10], 2)
-        print int(self.__instruction[10:14], 2)
         print self.__sixteen_byte_wide_registers
+        print self.o_out_port
+        print self.o_port_id
+        self.__instruction = "10110111111111000" #OUTPUT s15, s15
+        name_instruction = self.__operation[self.__instruction[0:5]]
+        print name_instruction
+        self.__exec_instruction(name_instruction)
+        print self.__sixteen_byte_wide_registers
+        print self.o_out_port
+        print self.o_port_id
+        self.__instruction = "10110000000011111" #OUTPUT s0, s0
+        name_instruction = self.__operation[self.__instruction[0:5]]
+        print name_instruction
+        self.__exec_instruction(name_instruction)
+        print self.__sixteen_byte_wide_registers
+        print self.o_out_port
+        print self.o_port_id
 
 cpu = PicoBlaze()
 cpu.run()
+
