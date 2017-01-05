@@ -127,6 +127,18 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
+    def __INPUT(self):
+        sx = int(self.__instruction[6:10], 2)
+        if self.__instruction[5] == '1':
+            operand = int(self.__instruction[10:14], 2)
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.__sixteen_byte_wide_registers[sx] = self.i_in_port
+        self.o_port_id = self.__sixteen_byte_wide_registers[operand]
+
+        self.__program_counter += 1
+
     def __OR(self):
         sx = int(self.__instruction[6:10], 2)
         if self.__instruction[5] == '1':
@@ -142,6 +154,18 @@ class PicoBlaze:
             self.__flag_zero = 1
         else:
             self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __OUTPUT(self):
+        sx = int(self.__instruction[6:10], 2)
+        if self.__instruction[5] == '1':
+            operand = int(self.__instruction[10:14], 2)
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.o_out_port = self.__sixteen_byte_wide_registers[sx]
+        self.o_port_id = self.__sixteen_byte_wide_registers[operand]
 
         self.__program_counter += 1
 
