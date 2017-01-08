@@ -110,8 +110,8 @@ def test_ADDCY_sx_sy_flag_carry():
 
 def test_AND_sx_kk():
     cpu = PicoBlaze()
-    #         "011010xxxxkkkkkkkk"
-    program = "011010000001111111"  # AND s0, kk
+    #         "001010xxxxkkkkkkkk"
+    program = "001010000001111111"  # AND s0, kk
     value_register_sx = 1
     number_register_sx = 0
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
@@ -158,5 +158,5 @@ def test_AND_sx_sy_flag_carry():
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
     cpu.run(program)
-    expected_flag_carry = 1
+    expected_flag_carry = 0
     assert expected_flag_carry == cpu._PicoBlaze__flag_carry
