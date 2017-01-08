@@ -49,7 +49,7 @@ class PicoBlaze:
         else:
             operand = int(self.__instruction[10:], 2)
 
-        sx = (sx + operand) % 256
+        register_sx = (sx + operand) % 256
 
         if (sx + operand) > 255:
             self.__flag_carry = 1
@@ -61,7 +61,7 @@ class PicoBlaze:
         else:
             self.__flag_zero = 0
 
-        self.__sixteen_byte_wide_registers[sx_number] = sx
+        self.__sixteen_byte_wide_registers[sx_number] = register_sx
         self.__program_counter += 1
 
     # def __ADDCY(self):
