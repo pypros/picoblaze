@@ -13,16 +13,16 @@ def test_ADD_sx_kk():
     assert expected_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
 
 
-# def test_ADD_sx_sy():
-#     cpu = PicoBlaze()
-#     #         "011001xxxxyyyy0000"
-#     program = "101101000011110000"  # OUTPUT sx, sy
-#     value_register_sx = 255
-#     number_register_sx = 0
-#     value_register_sy = 127
-#     number_register_sy = 15
-#     out_port_id = 127
-#     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
-#     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
-#     cpu.run(program)
-#     assert (value_register_sx, out_port_id) == (cpu.o_out_port, cpu.o_port_id)
+def test_ADD_sx_sy():
+    cpu = PicoBlaze()
+    #         "011001xxxxyyyy0000"
+    program = "011001000011110000"  # OUTPUT sx, sy
+    value_register_sx = 2
+    number_register_sx = 0
+    value_register_sy = 1
+    number_register_sy = 15
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
+    cpu.run(program)
+    expected_register_sx = value_register_sx + value_register_sy
+    assert expected_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
