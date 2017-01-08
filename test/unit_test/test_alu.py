@@ -160,3 +160,30 @@ def test_AND_sx_sy_flag_carry():
     cpu.run(program)
     expected_flag_carry = 0
     assert expected_flag_carry == cpu._PicoBlaze__flag_carry
+
+
+def test_COMPARE_sx_kk():
+    cpu = PicoBlaze()
+    #         "010100xxxxkkkkkkkk"
+    program = "010100000001111111"  # COMPARE s0, kk
+    value_register_sx = 127
+    number_register_sx = 0
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu.run(program)
+    expected_flag_zero = 1
+    assert expected_flag_zero == cpu._PicoBlaze__flag_zero
+
+
+def test_COMPARE_sx_sy():
+    cpu = PicoBlaze()
+    #         "001011xxxxyyyy0000"
+    program = "001011000011110000"  # AND sx, sy
+    value_register_sx = 3
+    number_register_sx = 0
+    value_register_sy = 2
+    number_register_sy = 15
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
+    cpu.run(program)
+    expected_flag_carry = 1
+    assert expected_flag_carry == cpu._PicoBlaze__flag_carry
