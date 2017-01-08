@@ -39,32 +39,29 @@ class PicoBlaze:
             "00111": "XOR"
         }
 
-    # def __ADD(self):
-    #     sx_number = int(self.__instruction[6:10], 2)
-    #     sx = self.__sixteen_byte_wide_registers[sx_number]
-    #
-    #     if self.__instruction[5] == '1':
-    #         sy_number = int(self.__instruction[10:14], 2)
-    #         operand = self.__sixteen_byte_wide_registers[sy_number]
-    #     else:
-    #         operand = int(self.__instruction[10:], 2)
-    #
-    #      = (self.__sixteen_byte_wide_registers[sx]
-    #                                               + self.__sixteen_byte_wide_registers[operand]) % 256
-    #     if (self.__sixteen_byte_wide_registers[sx]
-    #             + self.__sixteen_byte_wide_registers[operand]) > 255:
-    #         self.__flag_carry = 1
-    #     else:
-    #         self.__flag_carry = 0
-    #
-    #     if ((self.__sixteen_byte_wide_registers[sx] + self.__sixteen_byte_wide_registers[operand] == 0) or
-    #             (self.__sixteen_byte_wide_registers[sx] + self.__sixteen_byte_wide_registers[operand]) == 256):
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__sixteen_byte_wide_registers[sx] = sx
-    #     self.__program_counter += 1
+    def __ADD(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        sx = (sx + operand) % 256
+        if (sx + operand) > 255:
+            self.__flag_carry = 1
+        else:
+            self.__flag_carry = 0
+
+        if (sx + operand == 0) or (sx + operand == 256):
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__sixteen_byte_wide_registers[sx_number] = sx
+        self.__program_counter += 1
 
     # def __ADDCY(self):
     #     sx = int(self.__instruction[6:10], 2)
