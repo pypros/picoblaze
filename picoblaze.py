@@ -50,6 +50,7 @@ class PicoBlaze:
             operand = int(self.__instruction[10:], 2)
 
         sx = (sx + operand) % 256
+
         if (sx + operand) > 255:
             self.__flag_carry = 1
         else:
