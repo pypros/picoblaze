@@ -7,10 +7,9 @@ def test_ADD_sx_kk():
     program = "011000000001111111"  # OUTPUT s0, kk
     value_register_sx = 1
     number_register_sx = 0
-    out_port_id = 0
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
     cpu.run(program)
-    expected_register_sx = cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] + int(program[10:], 2)
+    expected_register_sx = value_register_sx + int(program[10:], 2)
     assert expected_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
 
 
