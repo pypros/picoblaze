@@ -176,11 +176,11 @@ def test_COMPARE_sx_kk():
 
 def test_COMPARE_sx_sy():
     cpu = PicoBlaze()
-    #         "001011xxxxyyyy0000"
-    program = "001011000011110000"  # AND sx, sy
-    value_register_sx = 3
+    #         "010101xxxxyyyy0000"
+    program = "010101000011110000"  # AND sx, sy
+    value_register_sx = 2
     number_register_sx = 0
-    value_register_sy = 2
+    value_register_sy = 3
     number_register_sy = 15
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
