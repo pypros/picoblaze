@@ -10,8 +10,8 @@ def test_ADD_sx_kk():
     out_port_id = 0
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
     cpu.run(program)
-    expexted_register_sx = cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] + int(program[10:], 2)
-    assert expexted_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
+    expected_register_sx = cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] + int(program[10:], 2)
+    assert expected_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
 
 
 # def test_ADD_sx_sy():
