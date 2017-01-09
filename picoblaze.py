@@ -309,21 +309,23 @@ class PicoBlaze:
     #
     #     self.__program_counter += 1
     #
-    # def __SRA(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #     str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
-    #     sra_sx = str(self.__flag_carry) + str_sx[0:7]
-    #     self.__sixteen_byte_wide_registers[sx] = int(sra_sx, 2)
-    #
-    #     self.__flag_carry = int(str_sx[7])
-    #
-    #     if self.__sixteen_byte_wide_registers[sx] == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
-    #
+    def __SRA(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        str_sx = format(sx, 'b').zfill(8)
+        sra_sx = str(self.__flag_carry) + str_sx[0:7]
+
+        self.__sixteen_byte_wide_registers[sx_number] = int(sra_sx, 2)
+        self.__flag_carry = int(str_sx[7])
+
+        if sx == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
     def __SRX(self):
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
