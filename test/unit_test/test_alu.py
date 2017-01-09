@@ -256,6 +256,18 @@ def test_SRA():
     assert expected_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
 
 
+def test_SRA_flag_zero():
+    cpu = PicoBlaze()
+    #         "100000xxxx00001000"
+    program = "100000000000001000"  # SRA sx
+    value_register_sx = 0
+    number_register_sx = 0
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu.run(program)
+    expected_flag_zero = 1
+    assert expected_flag_zero == cpu._PicoBlaze__flag_zero
+
+
 def test_SRA_flag_carry():
     cpu = PicoBlaze()
     #         "100000xxxx00001000"
@@ -277,8 +289,19 @@ def test_SRX():
     number_register_sx = 0
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
     cpu.run(program)
-    expected_flag_carry = 1
-    assert expected_flag_carry == cpu._PicoBlaze__flag_carry
+    expected_register_sx = 3 >> 1
+    assert expected_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
+
+def test_SRX_flag_zero():
+    cpu = PicoBlaze()
+    #         "100000xxxx00001010"
+    program = "100000000000001010"  # SRX sx
+    value_register_sx = 0
+    number_register_sx = 0
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu.run(program)
+    expected_flag_zero = 1
+    assert expected_flag_zero == cpu._PicoBlaze__flag_zero
 
 
 def test_SRX_flag_carry():
@@ -289,8 +312,9 @@ def test_SRX_flag_carry():
     number_register_sx = 0
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
     cpu.run(program)
-    expected_register_sx = 3 >> 1
-    assert expected_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
+    expected_flag_carry = 1
+    assert expected_flag_carry == cpu._PicoBlaze__flag_carry
+
 
 
 def test_SUB_sx_kk():
