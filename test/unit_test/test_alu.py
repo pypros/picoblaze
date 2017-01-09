@@ -350,6 +350,33 @@ def test_SUBCY_sx_sy_flag_carry():
     assert expected_flag_carry == cpu._PicoBlaze__flag_carry
 
 
+def test_TEST_sx_kk_flag_zero():
+    cpu = PicoBlaze()
+    #         "010010xxxxkkkkkkkk"
+    program = "010010000011111111"  # TEST s0, kk
+    value_register_sx = 0
+    number_register_sx = 0
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu.run(program)
+    expected_flag_zero = 1
+    assert expected_flag_zero == cpu._PicoBlaze__flag_zero
+
+
+def test_TEST_sx_sy_flag_carry():
+    cpu = PicoBlaze()
+    #         "010011xxxxyyyykkkk"
+    program = "010011000011110000"  # TEST s0, s15
+    value_register_sx = 127
+    number_register_sx = 0
+    value_register_sy = 255
+    number_register_sy = 15
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
+    cpu.run(program)
+    expected_flag_carry = 1
+    assert expected_flag_carry == cpu._PicoBlaze__flag_carry
+
+
 def test_XOR_sx_kk():
     cpu = PicoBlaze()
     #         "001100xxxxkkkkkkkk"

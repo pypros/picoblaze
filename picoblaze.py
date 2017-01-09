@@ -394,44 +394,44 @@ class PicoBlaze:
         self.__sixteen_byte_wide_registers[sx_number] = register_sx
         self.__program_counter += 1
 
-    # def __TEST(self):
-    #     sx_number = int(self.__instruction[6:10], 2)
-    #     sx = self.__sixteen_byte_wide_registers[sx_number]
-    #
-    #     if self.__instruction[5] == '1':
-    #         sy_number = int(self.__instruction[10:14], 2)
-    #         operand = self.__sixteen_byte_wide_registers[sy_number]
-    #     else:
-    #         operand = int(self.__instruction[10:], 2)
-    #
-    #     # and_test = sx & operand
-    #     and_test = ""
-    #     str_sx = str(bin(sx))[2:]
-    #     str_operand = str(bin(operand))[2:]
-    #     for bit_sx, bit_operand in zip(str_sx, str_operand):
-    #         and_test += str(int(bit_sx) & int(bit_operand))
-    #
-    #     and_test = int(and_test,2)
-    #
-    #     if and_test == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     xor_test = 0
-    #
-    #     for bit_and_test in str(bin(and_test))[2:]:
-    #         xor_test = int(bit_and_test) ^ xor_test
-    #
-    #     # for bit in str(and_test):
-    #     #     xor_test = int(bit) ^ xor_test
-    #
-    #     if xor_test == 1:
-    #         self.__flag_carry = 1
-    #     else:
-    #         self.__flag_carry = 0
-    #
-    #     self.__program_counter += 1
+    def __TEST(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        # and_test = sx & operand
+        and_test = ""
+        str_sx = str(bin(sx))[2:].zfill(8)
+        str_operand = str(bin(operand))[2:].zfill(8)
+        for bit_sx, bit_operand in zip(str_sx, str_operand):
+            and_test += str(int(bit_sx) & int(bit_operand))
+
+        and_test = int(and_test,2)
+
+        if and_test == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        xor_test = 0
+
+        for bit_and_test in str(bin(and_test))[2:].zfill(8):
+            xor_test = int(bit_and_test) ^ xor_test
+
+        # for bit in str(and_test):
+        #     xor_test = int(bit) ^ xor_test
+
+        if xor_test == 1:
+            self.__flag_carry = 1
+        else:
+            self.__flag_carry = 0
+
+        self.__program_counter += 1
 
     def __XOR(self):
         sx_number = int(self.__instruction[6:10], 2)
