@@ -68,23 +68,25 @@ class PicoBlaze:
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
 
+        carry = self.__flag_carry
+
         if self.__instruction[5] == '1':
             sy_number = int(self.__instruction[10:14], 2)
             operand = self.__sixteen_byte_wide_registers[sy_number]
         else:
             operand = int(self.__instruction[10:], 2)
 
-        if self.__flag_carry:
+        if carry:
             register_sx = (sx + operand + 1) % 256
         else:
             register_sx = (sx + operand) % 256
 
-        if sx + operand + self.__flag_carry > 255:
+        if sx + operand + carry > 255:
             self.__flag_carry = 1
         else:
             self.__flag_carry = 0
 
-        if (sx + operand + self.__flag_carry == 0) or (sx + operand + self.__flag_carry == 256):
+        if (sx + operand + carry == 0) or (sx + operand + carry == 256):
             self.__flag_zero = 1
         else:
             self.__flag_zero = 0
@@ -151,24 +153,28 @@ class PicoBlaze:
     #     self.__sixteen_byte_wide_registers[sx_number] = sx
     #     self.__program_counter += 1
 
-    # def __OR(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #     if self.__instruction[5] == '1':
-    #         operand = int(self.__instruction[10:14], 2)
-    #     else:
-    #         operand = int(self.__instruction[10:], 2)
-    #
-    #     self.__sixteen_byte_wide_registers[sx] |= self.__sixteen_byte_wide_registers[operand]
-    #
-    #     self.__flag_carry = 0
-    #
-    #     if self.__sixteen_byte_wide_registers[sx] == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
-    #
+    def __OR(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        register_sx = sx | operand
+
+        self.__flag_carry = 0
+
+        if sx == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__sixteen_byte_wide_registers[sx_number] = register_sx
+        self.__program_counter += 1
+
     def __OUTPUT(self):
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
@@ -333,99 +339,121 @@ class PicoBlaze:
     #
     #     self.__program_counter += 1
     #
-    # def __SUB(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #     if self.__instruction[5] == '1':
-    #         operand = int(self.__instruction[10:14], 2)
-    #     else:
-    #         operand = int(self.__instruction[10:], 2)
-    #
-    #     self.__sixteen_byte_wide_registers[sx] = (self.__sixteen_byte_wide_registers[sx]
-    #                                               - self.__sixteen_byte_wide_registers[operand]) % 256
-    #     if (self.__sixteen_byte_wide_registers[sx]
-    #             - self.__sixteen_byte_wide_registers[operand]) < 0:
-    #         self.__flag_carry = 1
-    #     else:
-    #         self.__flag_carry = 0
-    #
-    #     if self.__sixteen_byte_wide_registers[sx] - self.__sixteen_byte_wide_registers[operand] == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
-    #
-    # def __SUBCY(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #     if self.__instruction[5] == '1':
-    #         operand = int(self.__instruction[10:14], 2)
-    #     else:
-    #         operand = int(self.__instruction[10:], 2)
-    #
-    #     self.__sixteen_byte_wide_registers[sx] = (self.__sixteen_byte_wide_registers[sx]
-    #                                               - self.__sixteen_byte_wide_registers[operand] - self.__flag_carry) % 256
-    #
-    #     if self.__flag_carry:
-    #         self.__sixteen_byte_wide_registers[sx] = (self.__sixteen_byte_wide_registers[sx] -
-    #                                                   self.__sixteen_byte_wide_registers[operand] - 1) % 256
-    #     else:
-    #         self.__sixteen_byte_wide_registers[sx] = (self.__sixteen_byte_wide_registers[sx] -
-    #                                                   self.__sixteen_byte_wide_registers[operand]) % 256
-    #
-    #     if (self.__sixteen_byte_wide_registers[sx]
-    #             - self.__sixteen_byte_wide_registers[operand] - self.__flag_carry) < 0:
-    #         self.__flag_carry = 1
-    #     else:
-    #         self.__flag_carry = 0
-    #
-    #     if ((self.__sixteen_byte_wide_registers[sx] - self.__sixteen_byte_wide_registers[operand] - self.__flag_carry == 0) or
-    #             (self.__sixteen_byte_wide_registers[sx] - self.__sixteen_byte_wide_registers[operand] - self.__flag_carry) == -256):
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
-    #
+    def __SUB(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        register_sx = (sx - operand) % 256
+
+        if (sx - operand) < 0:
+            self.__flag_carry = 1
+        else:
+            self.__flag_carry = 0
+
+        if (sx - operand) == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__sixteen_byte_wide_registers[sx_number] = register_sx
+        self.__program_counter += 1
+
+    def __SUBCY(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        carry = self.__flag_carry
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        if carry:
+            register_sx = (sx - operand - 1) % 256
+        else:
+            register_sx = (sx - operand) % 256
+
+        if sx - operand - carry < 0:
+            self.__flag_carry = 1
+        else:
+            self.__flag_carry = 0
+
+        if (sx - operand - carry == 0) or (sx - operand - carry == -256):
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__sixteen_byte_wide_registers[sx_number] = register_sx
+        self.__program_counter += 1
+
     # def __TEST(self):
-    #     sx = int(self.__instruction[6:10], 2)
+    #     sx_number = int(self.__instruction[6:10], 2)
+    #     sx = self.__sixteen_byte_wide_registers[sx_number]
+    #
     #     if self.__instruction[5] == '1':
-    #         operand = int(self.__instruction[10:14], 2)
+    #         sy_number = int(self.__instruction[10:14], 2)
+    #         operand = self.__sixteen_byte_wide_registers[sy_number]
     #     else:
     #         operand = int(self.__instruction[10:], 2)
     #
-    #     and_test = self.__sixteen_byte_wide_registers[sx] & self.__sixteen_byte_wide_registers[operand]
+    #     # and_test = sx & operand
+    #     and_test = ""
+    #     str_sx = str(bin(sx))[2:]
+    #     str_operand = str(bin(operand))[2:]
+    #     for bit_sx, bit_operand in zip(str_sx, str_operand):
+    #         and_test += str(int(bit_sx) & int(bit_operand))
+    #
+    #     and_test = int(and_test,2)
     #
     #     if and_test == 0:
     #         self.__flag_zero = 1
     #     else:
     #         self.__flag_zero = 0
     #
-    #     xor_test = self.__sixteen_byte_wide_registers[sx] ^ self.__sixteen_byte_wide_registers[operand]
+    #     xor_test = 0
     #
-    #     if xor_test == 0:
+    #     for bit_and_test in str(bin(and_test))[2:]:
+    #         xor_test = int(bit_and_test) ^ xor_test
+    #
+    #     # for bit in str(and_test):
+    #     #     xor_test = int(bit) ^ xor_test
+    #
+    #     if xor_test == 1:
     #         self.__flag_carry = 1
     #     else:
     #         self.__flag_carry = 0
     #
     #     self.__program_counter += 1
-    #
-    # def __XOR(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #     if self.__instruction[5] == '1':
-    #         operand = int(self.__instruction[10:14], 2)
-    #     else:
-    #         operand = int(self.__instruction[10:], 2)
-    #
-    #     self.__sixteen_byte_wide_registers[sx] ^= self.__sixteen_byte_wide_registers[operand]
-    #
-    #     self.__flag_carry = 0
-    #
-    #     if self.__sixteen_byte_wide_registers[sx] == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
+
+    def __XOR(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        register_sx = sx ^ operand
+
+        self.__flag_carry = 0
+
+        if sx == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__sixteen_byte_wide_registers[sx_number] = register_sx
+        self.__program_counter += 1
 
     def __exec_instruction(self, name_instruction):
         if name_instruction == "ADD":
