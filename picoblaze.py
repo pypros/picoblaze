@@ -324,21 +324,24 @@ class PicoBlaze:
     #
     #     self.__program_counter += 1
     #
-    # def __SRX(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #     str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
-    #     srx_sx = str_sx[0] + str_sx[0:7]
-    #     self.__sixteen_byte_wide_registers[sx] = int(srx_sx, 2)
-    #
-    #     self.__flag_carry = int(str_sx[7])
-    #
-    #     if self.__sixteen_byte_wide_registers[sx] == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
-    #
+    def __SRX(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        str_sx = format(sx, 'b').zfill(8)
+        srx_sx = str_sx[0] + str_sx[0:7]
+
+        self.__sixteen_byte_wide_registers[sx_number] = int(srx_sx, 2)
+
+        self.__flag_carry = int(str_sx[7])
+
+        if sx == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
     def __SUB(self):
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
@@ -404,14 +407,13 @@ class PicoBlaze:
         else:
             operand = int(self.__instruction[10:], 2)
 
-        # and_test = sx & operand
         and_test = ""
         str_sx = str(bin(sx))[2:].zfill(8)
         str_operand = str(bin(operand))[2:].zfill(8)
         for bit_sx, bit_operand in zip(str_sx, str_operand):
             and_test += str(int(bit_sx) & int(bit_operand))
 
-        and_test = int(and_test,2)
+        and_test = int(and_test, 2)
 
         if and_test == 0:
             self.__flag_zero = 1
@@ -422,9 +424,6 @@ class PicoBlaze:
 
         for bit_and_test in str(bin(and_test))[2:].zfill(8):
             xor_test = int(bit_and_test) ^ xor_test
-
-        # for bit in str(and_test):
-        #     xor_test = int(bit) ^ xor_test
 
         if xor_test == 1:
             self.__flag_carry = 1
