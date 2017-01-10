@@ -219,21 +219,23 @@ class PicoBlaze:
     #
     #     self.__program_counter += 1
     #
-    # def __SL0(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #     str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
-    #     sl0 = self.__sixteen_byte_wide_registers[sx] << 1
-    #     self.__sixteen_byte_wide_registers[sx] = sl0
-    #
-    #     self.__flag_carry = int(str_sx[0])
-    #
-    #     if self.__sixteen_byte_wide_registers[sx] == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
-    #
+    def __SL0(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        str_sx = format(sx, 'b').zfill(8)
+        sl0 = sx << 1
+        self.__sixteen_byte_wide_registers[sx_number] = sl0
+
+        self.__flag_carry = int(str_sx[0])
+
+        if sx == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
     def __SL1(self):
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
