@@ -188,37 +188,40 @@ class PicoBlaze:
         self.o_out_port = sx
 
         self.__program_counter += 1
-    #
-    # def __RL(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #
-    #     str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
-    #     rl_sx = str_sx[1:] + str_sx[0]
-    #     self.__sixteen_byte_wide_registers[sx] = int(rl_sx, 2)
-    #     self.__flag_carry = int(str_sx[0])
-    #
-    #     if self.__sixteen_byte_wide_registers[sx] == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
-    #
-    # def __RR(self):
-    #     sx = int(self.__instruction[6:10], 2)
-    #
-    #     str_sx = format(self.__sixteen_byte_wide_registers[sx], 'b').zfill(8)
-    #     rr_sx = str_sx[7] + str_sx[0:7]
-    #     self.__sixteen_byte_wide_registers[sx] = int(rr_sx, 2)
-    #     self.__flag_carry = int(str_sx[7])
-    #
-    #     if self.__sixteen_byte_wide_registers[sx] == 0:
-    #         self.__flag_zero = 1
-    #     else:
-    #         self.__flag_zero = 0
-    #
-    #     self.__program_counter += 1
-    #
+
+    def __RL(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        str_sx = format(sx, 'b').zfill(8)
+        rl_sx = str_sx[1:] + str_sx[0]
+        self.__sixteen_byte_wide_registers[sx_number] = int(rl_sx, 2)
+        self.__flag_carry = int(str_sx[0])
+
+        if sx == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
+    def __RR(self):
+        sx_number = int(self.__instruction[6:10], 2)
+        sx = self.__sixteen_byte_wide_registers[sx_number]
+
+        str_sx = format(sx, 'b').zfill(8)
+        rr_sx = str_sx[7] + str_sx[0:7]
+
+        self.__sixteen_byte_wide_registers[sx_number] = int(rr_sx, 2)
+        self.__flag_carry = int(str_sx[7])
+
+        if sx == 0:
+            self.__flag_zero = 1
+        else:
+            self.__flag_zero = 0
+
+        self.__program_counter += 1
+
     def __SL0(self):
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
