@@ -142,8 +142,17 @@ class PicoBlaze:
 
 
     def __FETCH(self):
+        sx_number = int(self.__instruction[6:10], 2)
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[12:], 2)
+
+        self.__sixteen_byte_wide_registers[sx_number] = self.__sixty_four_byte_scratchpad_ram[operand]
+
         self.__program_counter += 1
-        pass
 
     def __INPUT(self):
         sx_number = int(self.__instruction[6:10], 2)
@@ -486,6 +495,8 @@ class PicoBlaze:
             self.__AND()
         elif name_instruction == "COMPARE":
             self.__COMPARE()
+        elif name_instruction == "FETCH":
+            self.__FETCH()
         elif name_instruction == "INPUT":
             self.__INPUT()
         elif name_instruction == "OR":
