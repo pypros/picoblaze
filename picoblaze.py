@@ -16,6 +16,8 @@ class PicoBlaze:
         self.__instruction = '0'*16
         self.__program_counter = 0
         self.__sixteen_byte_wide_registers = [0]*16
+        self.__sixty_four_byte_scratchpad_ram = [0]*64
+        self.__sixteen_byte_wide_registers = [0] * 16
         self.__operation = {
             "01100": "ADD",
             "01101": "ADDCY",
@@ -138,20 +140,24 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
-    # def __INPUT(self):
-    #     sx_number = int(self.__instruction[6:10], 2)
-    #     sx = self.__sixteen_byte_wide_registers[sx_number]
-    #     if self.__instruction[5] == '1':
-    #         sy_number = int(self.__instruction[10:14], 2)
-    #         operand = self.__sixteen_byte_wide_registers[sy_number]
-    #     else:
-    #         operand = int(self.__instruction[10:], 2)
-    #
-    #     sx = self.i_in_port
-    #     self.o_port_id = operand
-    #
-    #     self.__sixteen_byte_wide_registers[sx_number] = sx
-    #     self.__program_counter += 1
+
+    def __FETCH(self):
+        self.__program_counter += 1
+        pass
+
+    def __INPUT(self):
+        sx_number = int(self.__instruction[6:10], 2)
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.__sixteen_byte_wide_registers[sx_number] = self.i_in_port
+        self.o_port_id = operand
+
+        self.__program_counter += 1
 
     def __OR(self):
         sx_number = int(self.__instruction[6:10], 2)
