@@ -1,6 +1,31 @@
 from picoblaze import PicoBlaze
 
 
+def test_FETCH_sx_kk():
+    cpu = PicoBlaze()
+    #         "000110xxxx00kkkkkk"
+    program = "000110000000111111"  # FETCH s0, kk
+    cpu._PicoBlaze__sixty_four_byte_scratchpad_ram[63] = 127
+    number_register_sx = 0
+    cpu.run(program)
+    expected_value_register_sx = 127
+    assert expected_value_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
+
+
+def test_FETCH_sx_sy():
+    cpu = PicoBlaze()
+    #         "000111xxxxyyyy0000"
+    program = "000111000011110000"  # COMPARE sx, sy
+    number_register_sx = 0
+    value_register_sy = 63
+    number_register_sy = 15
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
+    cpu._PicoBlaze__sixty_four_byte_scratchpad_ram[63] = 127
+    cpu.run(program)
+    expected_value_register_sx = 127
+    assert expected_value_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
+
+
 def test_INPUT_sx_kk():
     cpu = PicoBlaze()
     #         "000100xxxxkkkkkkkk"
@@ -53,3 +78,30 @@ def test_OUTPUT_sx_sy():
     cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
     cpu.run(program)
     assert (value_register_sx, out_port_id) == (cpu.o_out_port, cpu.o_port_id)
+
+
+def test_STORE_sx_kk():
+    cpu = PicoBlaze()
+    #         "000110xxxx00kkkkkk"
+    program = "101110000000111111"  # FETCH s0, kk
+    value_register_sx = 3
+    number_register_sx = 0
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu.run(program)
+    expected_value_record_from_sixty_four_byte_scratchpad_ram = 3
+    assert expected_value_record_from_sixty_four_byte_scratchpad_ram == cpu._PicoBlaze__sixty_four_byte_scratchpad_ram[63]
+
+
+def test_STORE_sx_sy():
+    cpu = PicoBlaze()
+    #         "000111xxxxyyyy0000"
+    program = "101111000011110000"  # FETCH s0, kk
+    value_register_sx = 3
+    number_register_sx = 0
+    value_register_sy = 63
+    number_register_sy = 15
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx] = value_register_sx
+    cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sy] = value_register_sy
+    cpu.run(program)
+    expected_value_record_from_sixty_four_byte_scratchpad_ram = 3
+    assert expected_value_record_from_sixty_four_byte_scratchpad_ram == cpu._PicoBlaze__sixty_four_byte_scratchpad_ram[63]
