@@ -374,6 +374,19 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
+    def __STORE(self):
+        sx_number = int(self.__instruction[6:10], 2)
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[12:], 2)
+
+        self.__sixty_four_byte_scratchpad_ram[operand] = self.__sixteen_byte_wide_registers[sx_number]
+
+        self.__program_counter += 1
+
     def __SUB(self):
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
@@ -524,6 +537,8 @@ class PicoBlaze:
                 self.__SRA()
             elif self.__instruction[14:18] == "1010":
                 self.__SRX()
+        elif name_instruction == "STORE":
+            self.__STORE()
         elif name_instruction == "SUB":
             self.__SUB()
         elif name_instruction == "SUBCY":
