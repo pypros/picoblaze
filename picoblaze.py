@@ -1,3 +1,5 @@
+import Queue
+
 class PicoBlaze:
     def __init__(self):
         self.i_in_port = 0
@@ -16,7 +18,7 @@ class PicoBlaze:
         self.__preserved_flag_carry = 0
         self.__instruction = '0'*16
         self.__program_counter = 0
-        self.__top_of_stack = [0] * 31
+        self.__top_of_stack = Queue.LifoQueue()
         self.__sixteen_byte_wide_registers = [0]*16
         self.__sixty_four_byte_scratchpad_ram = [0]*64
         self.__sixteen_byte_wide_registers = [0] * 16
@@ -118,6 +120,11 @@ class PicoBlaze:
             self.__flag_zero = 0
 
         self.__sixteen_byte_wide_registers[sx_number] = register_sx
+        self.__program_counter += 1
+
+    def __CALL(self):
+        address = int(self.__instruction[8:], 2)
+        self.__top_of_stack.put(address)
         self.__program_counter += 1
 
     def __COMPARE(self):
@@ -524,6 +531,8 @@ class PicoBlaze:
             self.__ADDCY()
         elif name_instruction == "AND":
             self.__AND()
+        elif name_instruction == "CALL":
+            self.__CALL()
         elif name_instruction == "COMPARE":
             self.__COMPARE()
         elif name_instruction == "INTERRUPT":
