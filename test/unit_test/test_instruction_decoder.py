@@ -1,6 +1,47 @@
 from picoblaze import PicoBlaze
 
 
+def test_CALL():
+    cpu = PicoBlaze()
+    #         "11000000aaaaaaaaaa"
+    program = "110000001111111111"  # CALL 1023
+    cpu.run(program)
+    expected_value_top_of_stack = 1023
+    cpu._PicoBlaze__top_of_stack
+    assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.get()
+
+# def test_CALL_C_executed():
+#     pass
+#
+#
+# def test_CALL_C_not_executed():
+#     pass
+#
+#
+# def test_CALL_NC_executed():
+#     pass
+#
+#
+# def test_CALL_NC_not_executed():
+#     pass
+#
+#
+# def test_CALL_Z_executed():
+#     pass
+#
+#
+# def test_CALL_Z_not_executed():
+#     pass
+#
+#
+# def test_CALL_NZ_executed():
+#     pass
+#
+#
+# def test_CALL_NZ_not_executed():
+#     pass
+
+
 def test_INTERRUPT_DISABLE():
     cpu = PicoBlaze()
     #         "111100000000000000"
