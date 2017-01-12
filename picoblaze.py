@@ -11,10 +11,12 @@ class PicoBlaze:
         self.o_interrupt_ack = 0
         self.__flag_zero = 0
         self.__flag_carry = 0
+        self.__flag_interrupt = 0
         self.__preserved_flag_zero = 0
         self.__preserved_flag_carry = 0
         self.__instruction = '0'*16
         self.__program_counter = 0
+        self.__top_of_stack = [0] * 31
         self.__sixteen_byte_wide_registers = [0]*16
         self.__sixty_four_byte_scratchpad_ram = [0]*64
         self.__sixteen_byte_wide_registers = [0] * 16
@@ -140,6 +142,9 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
+    def __INTERRUPT(self):
+        self.__flag_interrupt = int(self.__instruction[-1], 2)
+        self.__program_counter += 1
 
     def __FETCH(self):
         sx_number = int(self.__instruction[6:10], 2)
@@ -165,6 +170,19 @@ class PicoBlaze:
 
         self.__sixteen_byte_wide_registers[sx_number] = self.i_in_port
         self.o_port_id = operand
+
+        self.__program_counter += 1
+
+    def __LOAD(self):
+        sx_number = int(self.__instruction[6:10], 2)
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.__sixteen_byte_wide_registers[sx_number] = operand
 
         self.__program_counter += 1
 
@@ -508,10 +526,14 @@ class PicoBlaze:
             self.__AND()
         elif name_instruction == "COMPARE":
             self.__COMPARE()
+        elif name_instruction == "INTERRUPT":
+            self.__INTERRUPT()
         elif name_instruction == "FETCH":
             self.__FETCH()
         elif name_instruction == "INPUT":
             self.__INPUT()
+        elif name_instruction == "LOAD":
+            self.__LOAD()
         elif name_instruction == "OR":
             self.__OR()
         elif name_instruction == "OUTPUT":
