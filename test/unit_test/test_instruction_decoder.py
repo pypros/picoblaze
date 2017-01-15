@@ -1,45 +1,113 @@
 from picoblaze import PicoBlaze
 
 
-def test_CALL():
+def test_CALL_program_counter_value():
     cpu = PicoBlaze()
     #         "11000000aaaaaaaaaa"
     program = "110000001111111111"  # CALL 1023
+    cpu._PicoBlaze__program_counter = 50
     cpu.run(program)
-    expected_value_top_of_stack = 1023
-    cpu._PicoBlaze__top_of_stack
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_CALL_top_of_stack_value():
+    cpu = PicoBlaze()
+    #         "11000000aaaaaaaaaa"
+    program = "110000001111111111"  # CALL 1023
+    cpu._PicoBlaze__program_counter = 50
+    cpu.run(program)
+    expected_value_top_of_stack = 50
     assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.get()
 
-# def test_CALL_C_executed():
-#     pass
-#
-#
-# def test_CALL_C_not_executed():
-#     pass
-#
-#
-# def test_CALL_NC_executed():
-#     pass
-#
-#
-# def test_CALL_NC_not_executed():
-#     pass
-#
-#
-# def test_CALL_Z_executed():
-#     pass
-#
-#
-# def test_CALL_Z_not_executed():
-#     pass
-#
-#
-# def test_CALL_NZ_executed():
-#     pass
-#
-#
-# def test_CALL_NZ_not_executed():
-#     pass
+
+def test_CALL_C_executed_program_counter_value():
+    cpu = PicoBlaze()
+    #         "11000110aaaaaaaaaa"
+    program = "110001101111111111"  # CALL C 1023
+    cpu._PicoBlaze__flag_carry = 1
+    cpu._PicoBlaze__program_counter = 50
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_CALL_C_not_executed_top_of_stack_value():
+    cpu = PicoBlaze()
+    #         "11000110aaaaaaaaaa"
+    program = "110001101111111111"  # CALL C 1023
+    cpu._PicoBlaze__flag_carry = 0
+    cpu._PicoBlaze__program_counter = 50
+    cpu.run(program)
+    empty = True
+    expected_value_top_of_stack = empty
+    assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.empty()
+
+
+def test_CALL_NC_executed_program_counter_value():
+    cpu = PicoBlaze()
+    #         "11000111aaaaaaaaaa"
+    program = "110001111111111111"  # CALL NC 1023
+    cpu._PicoBlaze__flag_carry = 0
+    cpu._PicoBlaze__program_counter = 50
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_CALL_NC_not_executed_top_of_stack_value():
+    cpu = PicoBlaze()
+    #         "11000111aaaaaaaaaa"
+    program = "110001111111111111"  # CALL NC 1023
+    cpu._PicoBlaze__flag_carry = 1
+    cpu._PicoBlaze__program_counter = 50
+    cpu.run(program)
+    empty = True
+    expected_value_top_of_stack = empty
+    assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.empty()
+
+
+def test_CALL_Z_executed_program_counter_value():
+    cpu = PicoBlaze()
+    #         "11000100aaaaaaaaaa"
+    program = "110001001111111111"  # CALL NC 1023
+    cpu._PicoBlaze__flag_zero = 1
+    cpu._PicoBlaze__program_counter = 50
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_CALL_Z_not_executed_top_of_stack_value():
+    cpu = PicoBlaze()
+    #         "11000100aaaaaaaaaa"
+    program = "110001001111111111"  # CALL NC 1023
+    cpu._PicoBlaze__flag_zero = 0
+    cpu._PicoBlaze__program_counter = 50
+    cpu.run(program)
+    empty = True
+    expected_value_top_of_stack = empty
+    assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.empty()
+
+def test_CALL_NZ_executed_program_counter_value():
+    cpu = PicoBlaze()
+    #         "11000101aaaaaaaaaa"
+    program = "110001011111111111"  # CALL NC 1023
+    cpu._PicoBlaze__flag_zero = 0
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_CALL_NZ_not_executed_top_of_stack_value():
+    cpu = PicoBlaze()
+    #         "11000101aaaaaaaaaa"
+    program = "110001011111111111"  # CALL NC 1023
+    cpu._PicoBlaze__flag_zero = 1
+    cpu.run(program)
+    empty = True
+    expected_value_top_of_stack = empty
+    assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.empty()
 
 
 def test_INTERRUPT_DISABLE():
@@ -161,7 +229,6 @@ def test_LOAD_sx_sy():
     cpu.run(program)
     expected_value_register_sx = 255
     assert expected_value_register_sx == cpu._PicoBlaze__sixteen_byte_wide_registers[number_register_sx]
-
 
 
 def test_OUTPUT_sx_kk():

@@ -124,8 +124,45 @@ class PicoBlaze:
 
     def __CALL(self):
         address = int(self.__instruction[8:], 2)
-        self.__top_of_stack.put(address)
-        self.__program_counter += 1
+        pc = self.__program_counter
+        self.__top_of_stack.put(pc)
+        self.__program_counter = address
+
+    def __CALL_C(self):
+        address = int(self.__instruction[8:], 2)
+        pc = self.__program_counter
+        if self.__flag_carry:
+            self.__top_of_stack.put(pc)
+            self.__program_counter = address
+        else:
+            self.__program_counter += 1
+
+    def __CALL_NC(self):
+        address = int(self.__instruction[8:], 2)
+        pc = self.__program_counter
+        if not self.__flag_carry:
+            self.__top_of_stack.put(pc)
+            self.__program_counter = address
+        else:
+            self.__program_counter += 1
+
+    def __CALL_Z(self):
+        address = int(self.__instruction[8:], 2)
+        pc = self.__program_counter
+        if self.__flag_zero:
+            self.__top_of_stack.put(pc)
+            self.__program_counter = address
+        else:
+            self.__program_counter += 1
+
+    def __CALL_NZ(self):
+        address = int(self.__instruction[8:], 2)
+        pc = self.__program_counter
+        if not self.__flag_zero:
+            self.__top_of_stack.put(pc)
+            self.__program_counter = address
+        else:
+            self.__program_counter += 1
 
     def __COMPARE(self):
         sx_number = int(self.__instruction[6:10], 2)
@@ -532,7 +569,16 @@ class PicoBlaze:
         elif name_instruction == "AND":
             self.__AND()
         elif name_instruction == "CALL":
-            self.__CALL()
+            if self.__instruction[5:8] == "000":
+                self.__CALL()
+            elif self.__instruction[5:8] == "110":
+                self.__CALL_C()
+            elif self.__instruction[5:8] == "111":
+                self.__CALL_NC()
+            elif self.__instruction[5:8] == "100":
+                self.__CALL_Z()
+            elif self.__instruction[5:8] == "101":
+                self.__CALL_NZ()
         elif name_instruction == "COMPARE":
             self.__COMPARE()
         elif name_instruction == "INTERRUPT":
