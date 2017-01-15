@@ -298,6 +298,33 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
+    def __RETURN(self):
+        self.__program_counter = self.__top_of_stack.get() + 1
+
+    def __RETURN_C(self):
+        if self.__flag_carry:
+            self.__program_counter = self.__top_of_stack.get() + 1
+        else:
+            self.__program_counter += 1
+
+    def __RETURN_NC(self):
+        if not self.__flag_carry:
+            self.__program_counter = self.__top_of_stack.get() + 1
+        else:
+            self.__program_counter += 1
+
+    def __RETURN_Z(self):
+        if self.__flag_zero:
+            self.__program_counter = self.__top_of_stack.get() + 1
+        else:
+            self.__program_counter += 1
+
+    def __RETURN_NZ(self):
+        if not self.__flag_zero:
+            self.__program_counter = self.__top_of_stack.get() + 1
+        else:
+            self.__program_counter += 1
+
     def __RL(self):
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
@@ -636,6 +663,17 @@ class PicoBlaze:
             self.__OR()
         elif name_instruction == "OUTPUT":
             self.__OUTPUT()
+        elif name_instruction == "RETURN":
+            if self.__instruction[5:8] == "000":
+                self.__RETURN()
+            elif self.__instruction[5:8] == "110":
+                self.__RETURN_C()
+            elif self.__instruction[5:8] == "111":
+                self.__RETURN_NC()
+            elif self.__instruction[5:8] == "100":
+                self.__RETURN_Z()
+            elif self.__instruction[5:8] == "101":
+                self.__RETURN_NZ()
         elif name_instruction == "SHIFT":
             if self.__instruction[14:18] == "0010":
                 self.__RL()
