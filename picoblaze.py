@@ -190,6 +190,38 @@ class PicoBlaze:
         self.__flag_interrupt = int(self.__instruction[-1], 2)
         self.__program_counter += 1
 
+    def __JUMP(self):
+        address = int(self.__instruction[8:], 2)
+        self.__program_counter = address
+
+    def __JUMP_C(self):
+        address = int(self.__instruction[8:], 2)
+        if self.__flag_carry:
+            self.__program_counter = address
+        else:
+            self.__program_counter += 1
+
+    def __JUMP_NC(self):
+        address = int(self.__instruction[8:], 2)
+        if not self.__flag_carry:
+            self.__program_counter = address
+        else:
+            self.__program_counter += 1
+
+    def __JUMP_Z(self):
+        address = int(self.__instruction[8:], 2)
+        if self.__flag_zero:
+            self.__program_counter = address
+        else:
+            self.__program_counter += 1
+
+    def __JUMP_NZ(self):
+        address = int(self.__instruction[8:], 2)
+        if not self.__flag_zero:
+            self.__program_counter = address
+        else:
+            self.__program_counter += 1
+
     def __FETCH(self):
         sx_number = int(self.__instruction[6:10], 2)
 
@@ -587,6 +619,17 @@ class PicoBlaze:
             self.__FETCH()
         elif name_instruction == "INPUT":
             self.__INPUT()
+        elif name_instruction == "JUMP":
+            if self.__instruction[5:8] == "000":
+                self.__JUMP()
+            elif self.__instruction[5:8] == "110":
+                self.__JUMP_C()
+            elif self.__instruction[5:8] == "111":
+                self.__JUMP_NC()
+            elif self.__instruction[5:8] == "100":
+                self.__JUMP_Z()
+            elif self.__instruction[5:8] == "101":
+                self.__JUMP_NZ()
         elif name_instruction == "LOAD":
             self.__LOAD()
         elif name_instruction == "OR":
