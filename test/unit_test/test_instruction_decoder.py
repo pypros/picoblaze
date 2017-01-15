@@ -130,6 +130,93 @@ def test_INTERRUPT_ENABLE():
     assert expected_flag_interrupt == cpu._PicoBlaze__flag_interrupt
 
 
+def test_JUMP():
+    cpu = PicoBlaze()
+    #         "11010000aaaaaaaaaa"
+    program = "110100001111111111"  # JUMP 1023
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_JUMP_C_executed():
+    cpu = PicoBlaze()
+    #         "11010110aaaaaaaaaa"
+    program = "110101101111111111"  # JUMP C 1023
+    cpu._PicoBlaze__flag_carry = 1
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_JUMP_C_not_executed():
+    cpu = PicoBlaze()
+    #         "11010110aaaaaaaaaa"
+    program = "110101101111111111"  # JUMP C 1023
+    cpu._PicoBlaze__flag_carry = 0
+    cpu.run(program)
+    expected_value_program_counter = 1
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_JUMP_NC_executed():
+    cpu = PicoBlaze()
+    #         "11010111aaaaaaaaaa"
+    program = "110101111111111111"  # JUMP NC 1023
+    cpu._PicoBlaze__flag_carry = 0
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_JUMP_NC_not_executed():
+    cpu = PicoBlaze()
+    #         "11010111aaaaaaaaaa"
+    program = "110101111111111111"  # JUMP NC 1023
+    cpu._PicoBlaze__flag_carry = 1
+    cpu.run(program)
+    expected_value_program_counter = 1
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_JUMP_Z_executed_program_counter_value():
+    cpu = PicoBlaze()
+    #         "11010100aaaaaaaaaa"
+    program = "110101001111111111"  # JUMP Z 1023
+    cpu._PicoBlaze__flag_zero = 1
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_JUMP_Z_not_executed():
+    cpu = PicoBlaze()
+    #         "11010100aaaaaaaaaa"
+    program = "110101001111111111"  # JUMP Z 1023
+    cpu._PicoBlaze__flag_zero = 0
+    cpu.run(program)
+    expected_value_program_counter = 1
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+def test_JUMP_NZ_executed():
+    cpu = PicoBlaze()
+    #         "11010101aaaaaaaaaa"
+    program = "110101011111111111"  # JUMP NZ 1023
+    cpu._PicoBlaze__flag_zero = 0
+    cpu.run(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_JUMP_NZ_not_executed():
+    cpu = PicoBlaze()
+    #         "11000101aaaaaaaaaa"
+    program = "110001011111111111"  # JUMP NZ 1023
+    cpu._PicoBlaze__flag_zero = 1
+    cpu.run(program)
+    expected_value_program_counter = 1
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
 def test_FETCH_sx_kk():
     cpu = PicoBlaze()
     #         "000110xxxx00kkkkkk"
