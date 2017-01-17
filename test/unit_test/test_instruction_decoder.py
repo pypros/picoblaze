@@ -89,6 +89,7 @@ def test_CALL_Z_not_executed_top_of_stack_value():
     expected_value_top_of_stack = empty
     assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.empty()
 
+
 def test_CALL_NZ_executed_program_counter_value():
     cpu = PicoBlaze()
     #         "11000101aaaaaaaaaa"
@@ -442,6 +443,98 @@ def test_RETURN_NZ_not_executed():
     cpu.run(program)
     expected_value_program_counter = 1
     assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_RETURNI_DISABLE_program_counter_value():
+    cpu = PicoBlaze()
+    #         "111000000000000000"
+    program = "111000000000000000"  # RETURN NZ 1023
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    expected_value_program_counter = 1022
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_RETURNI_DISABLE_flag_carry_value():
+    cpu = PicoBlaze()
+    #         "111000000000000000"
+    program = "111000000000000000"  # RETURN NZ 1023
+    cpu._PicoBlaze__preserved_flag_carry = 1
+    cpu._PicoBlaze__flag_carry = 0
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    expected_value_flag_carry = 1
+    assert expected_value_flag_carry == cpu._PicoBlaze__flag_carry
+
+
+def test_RETURNI_DISABLE_flag_zero_value():
+    cpu = PicoBlaze()
+    #         "111000000000000000"
+    program = "111000000000000000"  # RETURN NZ 1023
+    cpu._PicoBlaze__preserved_flag_zero = 1
+    cpu._PicoBlaze__flag_zero = 0
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    expected_value_flag_zero = 1
+    assert expected_value_flag_zero == cpu._PicoBlaze__flag_zero
+
+
+def test_RETURNI_DISABLE_flag_interrupt_disable():
+    cpu = PicoBlaze()
+    #         "111000000000000000"
+    program = "111000000000000000"  # RETURN NZ 1023
+    cpu._PicoBlaze__preserved_flag_zero = 1
+    cpu._PicoBlaze__flag_interrupt = 1
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    expected_value_flag_interrupt = 0
+    assert expected_value_flag_interrupt == cpu._PicoBlaze__flag_interrupt
+
+
+def test_RETURNI_ENABLE_program_counter_value():
+    cpu = PicoBlaze()
+    #         "111000000000000001"
+    program = "111000000000000001"  # RETURN NZ 1023
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    expected_value_program_counter = 1022
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_RETURNI_ENABLE_flag_carry_value():
+    cpu = PicoBlaze()
+    #         "111000000000000001"
+    program = "111000000000000001"  # RETURN NZ 1023
+    cpu._PicoBlaze__preserved_flag_carry = 1
+    cpu._PicoBlaze__flag_carry = 0
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    expected_value_flag_carry = 1
+    assert expected_value_flag_carry == cpu._PicoBlaze__flag_carry
+
+
+def test_RETURNI_ENABLE_flag_zero_value():
+    cpu = PicoBlaze()
+    #         "111000000000000001"
+    program = "111000000000000001"  # RETURN NZ 1023
+    cpu._PicoBlaze__preserved_flag_zero = 1
+    cpu._PicoBlaze__flag_zero = 0
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    expected_value_flag_zero = 1
+    assert expected_value_flag_zero == cpu._PicoBlaze__flag_zero
+
+
+def test_RETURNI_ENABLE_flag_interrupt_enable():
+    cpu = PicoBlaze()
+    #         "111000000000000001"
+    program = "111000000000000001"  # RETURN NZ 1023
+    cpu._PicoBlaze__preserved_flag_zero = 1
+    cpu._PicoBlaze__flag_interrupt = 1
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    expected_value_flag_interrupt = 1
+    assert expected_value_flag_interrupt == cpu._PicoBlaze__flag_interrupt
 
 
 def test_STORE_sx_kk():

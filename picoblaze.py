@@ -325,6 +325,18 @@ class PicoBlaze:
         else:
             self.__program_counter += 1
 
+    def __RETURNI_DISABLE(self):
+        self.__program_counter = self.__top_of_stack.get()
+        self.__flag_carry = self.__preserved_flag_carry
+        self.__flag_zero = self.__preserved_flag_zero
+        self.__flag_interrupt = 0
+
+    def __RETURNI_ENABLE(self):
+        self.__program_counter = self.__top_of_stack.get()
+        self.__flag_carry = self.__preserved_flag_carry
+        self.__flag_zero = self.__preserved_flag_zero
+        self.__flag_interrupt = 1
+
     def __RL(self):
         sx_number = int(self.__instruction[6:10], 2)
         sx = self.__sixteen_byte_wide_registers[sx_number]
@@ -674,6 +686,11 @@ class PicoBlaze:
                 self.__RETURN_Z()
             elif self.__instruction[5:8] == "101":
                 self.__RETURN_NZ()
+        elif name_instruction == "RETURNI":
+            if self.__instruction[-1] == "0":
+                self.__RETURNI_DISABLE()
+            elif self.__instruction[-1] == "1":
+                self.__RETURNI_ENABLE()
         elif name_instruction == "SHIFT":
             if self.__instruction[14:18] == "0010":
                 self.__RL()
