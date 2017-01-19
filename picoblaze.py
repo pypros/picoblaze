@@ -3,7 +3,6 @@ import Queue
 class PicoBlaze:
     def __init__(self):
         self.i_in_port = 0
-        self.i_interrupt = 0
         self.i_clk = 0
         self.o_out_port = 0
         self.o_port_id = 0
@@ -43,6 +42,18 @@ class PicoBlaze:
             "01001": "TEST",
             "00111": "XOR"
         }
+
+    def i_interrupt(self, enable):
+        if (self.__flag_interrupt == 1) and (enable == 1):
+            self.__flag_interrupt = 0
+            pc = self.__program_counter
+            self.__top_of_stack.put(pc)
+            self.__preserved_flag_carry = self.__flag_carry
+            self.__preserved_flag_zero = self.__flag_zero
+            self.__program_counter = 0x3FF
+
+    def i_reset(self):
+        self.__RESET()
 
     def __ADD(self):
         sx_number = int(self.__instruction[6:10], 2)
@@ -185,7 +196,11 @@ class PicoBlaze:
 
         self.__program_counter += 1
 
-    def __INTERRUPT(self):
+    def __DISABLE_INTERRUPT(self):
+        self.__flag_interrupt = int(self.__instruction[-1], 2)
+        self.__program_counter += 1
+
+    def __ENABLE_INTERRUPT(self):
         self.__flag_interrupt = int(self.__instruction[-1], 2)
         self.__program_counter += 1
 
@@ -296,9 +311,6 @@ class PicoBlaze:
         self.o_out_port = sx
 
         self.__program_counter += 1
-
-    def i_reset(self):
-        self.__RESET()
 
     def __RESET(self):
         self.__program_counter = 0
@@ -663,7 +675,10 @@ class PicoBlaze:
         elif name_instruction == "COMPARE":
             self.__COMPARE()
         elif name_instruction == "INTERRUPT":
-            self.__INTERRUPT()
+            if self.__instruction[-1] == "0":
+                self.__DISABLE_INTERRUPT()
+            elif self.__instruction[-1] == "1":
+                self.__ENABLE_INTERRUPT()
         elif name_instruction == "FETCH":
             self.__FETCH()
         elif name_instruction == "INPUT":

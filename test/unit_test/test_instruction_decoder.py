@@ -111,6 +111,64 @@ def test_CALL_NZ_not_executed_top_of_stack_value():
     assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.empty()
 
 
+def test_INTERRUPT_event_executed_program_counter_value():
+    cpu = PicoBlaze()
+    #         "111100000000000001"
+    program = "111100000000000001"  # ENABLE INTERRUPT
+    cpu.run(program)
+    enable = 1
+    cpu.i_interrupt(enable)
+    expected_value_program_counter = 0x3FF
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_INTERRUPT_event_executed_top_of_stack_value():
+    cpu = PicoBlaze()
+    #         "111100000000000001"
+    program = "111100000000000001"  # ENABLE INTERRUPT
+    cpu._PicoBlaze__program_counter = 50
+    cpu.run(program) # program_counter = 50
+    enable = 1
+    cpu.i_interrupt(enable) # program_counter += 1 == 51
+    expected_value_program_counter = 51
+    assert expected_value_program_counter == cpu._PicoBlaze__top_of_stack.get()
+
+
+def test_INTERRUPT_event_executed_preserved_flag_carry_value():
+    cpu = PicoBlaze()
+    #         "111100000000000001"
+    program = "111100000000000001"  # ENABLE INTERRUPT
+    cpu._PicoBlaze__flag_carry = 1
+    cpu.run(program) # program_counter = 50
+    enable = 1
+    cpu.i_interrupt(enable) # program_counter += 1 == 51
+    expected_value_preserved_flag_carry = 1
+    assert expected_value_preserved_flag_carry == cpu._PicoBlaze__preserved_flag_carry
+
+
+def test_INTERRUPT_event_executed_preserved_flag_zero_value():
+    cpu = PicoBlaze()
+    #         "111100000000000001"
+    program = "111100000000000001"  # ENABLE INTERRUPT
+    cpu._PicoBlaze__flag_zero = 1
+    cpu.run(program) # program_counter = 50
+    enable = 1
+    cpu.i_interrupt(enable) # program_counter += 1 == 51
+    expected_value_preserved_flag_zero = 1
+    assert expected_value_preserved_flag_zero == cpu._PicoBlaze__preserved_flag_zero
+
+
+def test_INTERRUPT_event_executed_flag_interrupt_value():
+    cpu = PicoBlaze()
+    #         "111100000000000001"
+    program = "111100000000000001"  # ENABLE INTERRUPT
+    cpu._PicoBlaze__flag_interrupt = 0
+    cpu.run(program) # flag_interrupt = 1
+    enable = 1
+    cpu.i_interrupt(enable) # flag_interrupt = 0
+    expected_value_flag_interrupt = 0
+    assert expected_value_flag_interrupt == cpu._PicoBlaze__flag_interrupt
+
 def test_INTERRUPT_DISABLE():
     cpu = PicoBlaze()
     #         "111100000000000000"
