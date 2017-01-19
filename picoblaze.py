@@ -739,5 +739,3 @@ class PicoBlaze:
         self.__instruction = instruction
         name = self.__operation[self.__instruction[0:5]]
         self.__exec_instruction(name)
-
-
