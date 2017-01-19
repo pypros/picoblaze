@@ -347,6 +347,53 @@ def test_OUTPUT_sx_sy():
     assert (value_register_sx, out_port_id) == (cpu.o_out_port, cpu.o_port_id)
 
 
+def test_RESET_top_of_stack_empty():
+    cpu = PicoBlaze()
+    #         "10101000aaaaaaaaaa"
+    program = "101010001111111111"  # RETURN 1023
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    cpu.i_reset()
+    empty = True
+    expected_value_top_of_stack = empty
+    assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.empty()
+
+
+def test_RESET_program_counter_equal_zero():
+    cpu = PicoBlaze()
+    #         "10101000aaaaaaaaaa"
+    program = "101010001111111111"  # RETURN 1023
+    cpu._PicoBlaze__program_counter = 50
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    cpu.i_reset()
+    expected_value_program_counter = 0
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_RESET_flag_zero_equal_zero():
+    cpu = PicoBlaze()
+    #         "10101000aaaaaaaaaa"
+    program = "101010001111111111"  # RETURN 1023
+    cpu._PicoBlaze__flag_zero = 1
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    cpu.i_reset()
+    expected_value_flag_zero = 0
+    assert expected_value_flag_zero == cpu._PicoBlaze__flag_zero
+
+
+def test_RESET_flag_carry_equal_zero():
+    cpu = PicoBlaze()
+    #         "10101000aaaaaaaaaa"
+    program = "101010001111111111"  # RETURN 1023
+    cpu._PicoBlaze__flag_carry = 1
+    cpu._PicoBlaze__top_of_stack.put(1022)
+    cpu.run(program)
+    cpu.i_reset()
+    expected_value_flag_carry = 0
+    assert expected_value_flag_carry == cpu._PicoBlaze__flag_carry
+
 def test_RETURN():
     cpu = PicoBlaze()
     #         "10101000aaaaaaaaaa"
