@@ -4,7 +4,6 @@ class PicoBlaze:
     def __init__(self):
         self.i_in_port = 0
         self.i_interrupt = 0
-        self.i_reset = 0
         self.i_clk = 0
         self.o_out_port = 0
         self.o_port_id = 0
@@ -297,6 +296,17 @@ class PicoBlaze:
         self.o_out_port = sx
 
         self.__program_counter += 1
+
+    def i_reset(self):
+        self.__RESET()
+
+    def __RESET(self):
+        self.__program_counter = 0
+        self.__flag_zero = 0
+        self.__flag_carry = 0
+        self.__flag_interrupt = 0
+        while not self.__top_of_stack.empty():
+            self.__top_of_stack.get()
 
     def __RETURN(self):
         self.__program_counter = self.__top_of_stack.get() + 1
