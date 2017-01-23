@@ -204,6 +204,34 @@ class PicoBlaze:
         self.__flag_interrupt = int(self.__instruction[-1], 2)
         self.__program_counter += 1
 
+    def __FETCH(self):
+        sx_number = int(self.__instruction[6:10], 2)
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[12:], 2)
+
+        self.__sixteen_byte_wide_registers[sx_number] = self.__sixty_four_byte_scratchpad_ram[operand]
+
+        self.__program_counter += 1
+
+    def __INPUT(self):
+        sx_number = int(self.__instruction[6:10], 2)
+
+        if self.__instruction[5] == '1':
+            sy_number = int(self.__instruction[10:14], 2)
+            operand = self.__sixteen_byte_wide_registers[sy_number]
+        else:
+            operand = int(self.__instruction[10:], 2)
+
+        self.__sixteen_byte_wide_registers[sx_number] = self.i_in_port
+        self.o_port_id = operand
+        self.o_read_strobe = 1
+
+        self.__program_counter += 1
+
     def __JUMP(self):
         address = int(self.__instruction[8:], 2)
         self.__program_counter = address
@@ -235,33 +263,6 @@ class PicoBlaze:
             self.__program_counter = address
         else:
             self.__program_counter += 1
-
-    def __FETCH(self):
-        sx_number = int(self.__instruction[6:10], 2)
-
-        if self.__instruction[5] == '1':
-            sy_number = int(self.__instruction[10:14], 2)
-            operand = self.__sixteen_byte_wide_registers[sy_number]
-        else:
-            operand = int(self.__instruction[12:], 2)
-
-        self.__sixteen_byte_wide_registers[sx_number] = self.__sixty_four_byte_scratchpad_ram[operand]
-
-        self.__program_counter += 1
-
-    def __INPUT(self):
-        sx_number = int(self.__instruction[6:10], 2)
-
-        if self.__instruction[5] == '1':
-            sy_number = int(self.__instruction[10:14], 2)
-            operand = self.__sixteen_byte_wide_registers[sy_number]
-        else:
-            operand = int(self.__instruction[10:], 2)
-
-        self.__sixteen_byte_wide_registers[sx_number] = self.i_in_port
-        self.o_port_id = operand
-
-        self.__program_counter += 1
 
     def __LOAD(self):
         sx_number = int(self.__instruction[6:10], 2)
@@ -309,6 +310,7 @@ class PicoBlaze:
 
         self.o_port_id = operand
         self.o_out_port = sx
+        self.o_write_strobe = 1
 
         self.__program_counter += 1
 
@@ -753,4 +755,6 @@ class PicoBlaze:
     def run(self, instruction):
         self.__instruction = instruction
         name = self.__operation[self.__instruction[0:5]]
+        self.o_read_strobe = 0
+        self.o_write_strobe = 0
         self.__exec_instruction(name)
