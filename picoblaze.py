@@ -758,3 +758,9 @@ class PicoBlaze:
         self.o_read_strobe = 0
         self.o_write_strobe = 0
         self.__exec_instruction(name)
+        if self.__program_counter > 1023:
+            self.__program_counter = 0
+
+    def run_program(self, program):
+        self.run(program[self.__program_counter])
+

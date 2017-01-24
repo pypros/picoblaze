@@ -111,6 +111,38 @@ def test_CALL_NZ_not_executed_top_of_stack_value():
     assert expected_value_top_of_stack == cpu._PicoBlaze__top_of_stack.empty()
 
 
+def test_COUNTER_increase():
+    cpu = PicoBlaze()
+    program = ["000000000000000000"]*1024
+    #         "011000xxxxkkkkkkkk"
+    program[0] = "011000000001111111"  # ADD s0, kk
+    cpu.run_program(program)
+    expected_value_program_counter = 1
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_COUNTER_max_value():
+    cpu = PicoBlaze()
+    program = ["000000000000000000"]*1024
+    #         "011000xxxxkkkkkkkk"
+    program[1023] = "011000000001111111"  # ADD s0, kk
+    cpu._PicoBlaze__program_counter = 1022
+    cpu.run_program(program)
+    expected_value_program_counter = 1023
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
+def test_COUNTER_overflow():
+    cpu = PicoBlaze()
+    program = ["000000000000000000"]*1024
+    #         "011000xxxxkkkkkkkk"
+    program[1023] = "011000000001111111"  # ADD s0, kk
+    cpu._PicoBlaze__program_counter = 1023
+    cpu.run_program(program)
+    expected_value_program_counter = 0
+    assert expected_value_program_counter == cpu._PicoBlaze__program_counter
+
+
 def test_INTERRUPT_event_executed_program_counter_value():
     cpu = PicoBlaze()
     #         "111100000000000001"
